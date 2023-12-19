@@ -100,10 +100,12 @@ const sendRequest = async (req, res) => {
     if (isGreeting(body.query)) {
       responseText = getGreetingResponse();
     } else if (isBeerRelated(body.query)) {
-      responseText = getPredefinedResponse(body.query);
-    } else {
+      // Si la consulta está relacionada con cerveza, genera una respuesta a través de Cohere
       const enrichedPrompt = enrichPromptWithBeerContext(body.query);
       responseText = await generateResponse(enrichedPrompt);
+    } else {
+      // Si no es un saludo ni está relacionado con cerveza, utiliza la respuesta predefinida
+      responseText = getPredefinedResponse(body.query);
     }
 
     res.json(responseText);
@@ -112,6 +114,7 @@ const sendRequest = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
 
 
 export { sendRequest };
